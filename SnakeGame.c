@@ -1,19 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "types.h"
+#include "gamefunctions.h"
 
-void clearScreen(){
+void clear_screen(){
   system("clear");
 }
 
 void startGame(){
-  clearScreen();
+  clear_screen();
 }
 
-void displayHighScores(){
-  clearScreen();
+void display_high_scores(){
+  clear_screen();
 }
 
-void renderMenu(){
+void render_menu(){
   int option;
   printf("Choose an option:\n");
   printf("1 - Start a new game\n");
@@ -25,23 +27,23 @@ void renderMenu(){
         startGame();
         break;
       case 2:
-        displayHighScores();
+        display_high_scores();
         break;
       case 3:
-        clearScreen();
+        clear_screen();
         exit(0);
       default:
         printf("Invalid selection...\n\n");
-        renderMenu();
+        render_menu();
     }
   }
 }
 
 int main(){
-  clearScreen();
+  clear_screen();
   printf("The snake game Old-school...\n\n");
   printf("**************************\n");
-  renderMenu();
+  render_menu();
   return 0;
 }
 
