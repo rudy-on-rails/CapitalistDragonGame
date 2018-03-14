@@ -1,6 +1,6 @@
-#include <unistd.h>
+#include <time.h>
 
-void draw_up_or_down_wall(struct scenario *scenario){
+void draw_boundaries(struct scenario *scenario){
   for (int i = 0; i < scenario->width; ++i)
   {
     printf("-");
@@ -8,29 +8,45 @@ void draw_up_or_down_wall(struct scenario *scenario){
   printf("|");
 }
 
-void draw_left_and_right_walls(struct scenario *scenario){
+void draw_free_scenario(struct scenario *scenario, int current_height, struct snake *snake){
   for (int i = 0; i < scenario->width; ++i)
   {
-    printf(" ");
+    if (snake->position_x == current_height && snake->position_y == i){
+      printf("o");
+    }
+    else{
+      printf(" ");
+    }
   }
   printf("|");
 }
 
+void detect_collision(){
+
+}
+
 void draw_scenario(struct scenario *scenario, struct snake *snake){
   clear_screen();
-  for (int i = 0; i < scenario->height; ++i)
+  for (int height = 0; height < scenario->height; ++height)
   {
     printf("|");
-    if (i == 0){
-      draw_up_or_down_wall(scenario);
+    if (height == 0){
+      draw_boundaries(scenario);
     }
-    else if(i < scenario->height - 1){
-      draw_left_and_right_walls(scenario);
+    else if(height < scenario->height - 1){
+      draw_free_scenario(scenario, height, snake);
     }
     else{
-      draw_up_or_down_wall(scenario);
+      draw_boundaries(scenario);
     }
     printf("\n");
   }
-  sleep(1);
+  if (snake->moviment_direction == 0){
+    snake->position_y = snake->position_y + 1;
+  }
+  else{
+    snake->position_x = snake->position_x + 1;
+  }
+  detect_collision();
+  nanosleep((const struct timespec[]){{0, 600000000L}}, NULL);
 }

@@ -7,17 +7,18 @@
 void start_game(){
   clear_screen();
 
-  while(1){
-    int limit_screen_width = 100;
-    int limit_screen_height = 50;
+  int limit_screen_width = 100;
+  int limit_screen_height = 50;
+  int snake_position_x = generate_random_position(limit_screen_width / 2);
+  int snake_position_y = generate_random_position(limit_screen_height / 2);
 
-    int snake_position_x = generate_random_position(limit_screen_width);
-    int snake_position_y = generate_random_position(limit_screen_height);
+  struct snake player = { 0, snake_position_x, snake_position_y, 0 };
+
+  while(1){
     int food_position_x = generate_random_position(limit_screen_width);
     int food_position_y = generate_random_position(limit_screen_height);
 
     struct scenario main_scenario = { limit_screen_width, limit_screen_height, food_position_x, food_position_y };
-    struct snake player = { 0, snake_position_x, snake_position_y };
 
     draw_scenario(&main_scenario, &player);
   };
@@ -45,7 +46,6 @@ void render_menu(){
       display_high_scores();
       render_menu();
     case 3:
-      clear_screen();
       printf("See you soon\n");
       exit(0);
     default:

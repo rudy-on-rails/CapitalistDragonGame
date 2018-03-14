@@ -9,6 +9,7 @@ struct snake{
   int number_of_foods_eaten;
   int position_x;
   int position_y;
+  int moviment_direction; // 0 for horizontal, 1 for vertical
 };
 
 struct score{
