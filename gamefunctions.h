@@ -44,7 +44,7 @@ void detect_collision(){
 
 void draw_scenario(struct scenario *scenario, struct snake *snake, struct WINDOW *win){
   clear_screen();
-  int current_speed = 300000000L;
+  int current_speed = 20000000L;
   for (int height = 0; height < scenario->height; ++height)
   {
     printw("|");
@@ -74,6 +74,13 @@ void draw_scenario(struct scenario *scenario, struct snake *snake, struct WINDOW
     snake->position_x = snake->position_x - 1;
   }
 
+  if (scenario->food_position_x == snake->position_x && scenario->food_position_y == snake->position_y){
+    snake->number_of_foods_eaten = snake->number_of_foods_eaten + 1;
+    scenario->food_position_x = generate_random_position(LIMIT_SCREEN_HEIGHT / 2);
+    scenario->food_position_y = generate_random_position(LIMIT_SCREEN_WIDTH / 2);
+  }
+
+
   switch (getch()){
     case KEY_UP:
       snake->moviment_direction = 3;
@@ -88,7 +95,9 @@ void draw_scenario(struct scenario *scenario, struct snake *snake, struct WINDOW
       snake->moviment_direction = 0;
       break;
   }
+
   clear();
   detect_collision();
+
   nanosleep((const struct timespec[]){{0, current_speed}}, NULL);
 }

@@ -18,6 +18,11 @@ struct score{
 };
 
 enum{
+  LIMIT_SCREEN_WIDTH = 50,
+  LIMIT_SCREEN_HEIGHT = 20
+};
+
+enum{
   ARROW_UP    = 256 + 72,
   ARROW_DOWN  = 256 + 80,
   ARROW_LEFT  = 256 + 75,

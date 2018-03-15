@@ -10,17 +10,14 @@
 void start_game(struct WINDOW *win){
   clear_screen();
 
-  int limit_screen_width = 50;
-  int limit_screen_height = 20;
+  int snake_position_x = generate_random_position(LIMIT_SCREEN_HEIGHT / 2);
+  int snake_position_y = generate_random_position(LIMIT_SCREEN_WIDTH / 2);
 
-  int snake_position_x = generate_random_position(limit_screen_height / 2);
-  int snake_position_y = generate_random_position(limit_screen_width / 2);
-
-  int food_position_x = generate_random_position(limit_screen_height / 2);
-  int food_position_y = generate_random_position(limit_screen_width / 2);
+  int food_position_x = generate_random_position(LIMIT_SCREEN_HEIGHT / 2);
+  int food_position_y = generate_random_position(LIMIT_SCREEN_WIDTH / 2);
 
   struct snake player = { 0, snake_position_x, snake_position_y, 0 };
-  struct scenario main_scenario = { limit_screen_width, limit_screen_height, food_position_x, food_position_y };
+  struct scenario main_scenario = { LIMIT_SCREEN_WIDTH, LIMIT_SCREEN_HEIGHT, food_position_x, food_position_y };
 
   while(1){
     draw_scenario(&main_scenario, &player, win);
