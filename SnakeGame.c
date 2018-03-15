@@ -63,6 +63,8 @@ int main(){
 
   win = initscr();
 
+  srand ( time(NULL) );
+
   clear();
   noecho();
   cbreak();

@@ -9,28 +9,30 @@ void draw_boundaries(struct scenario *scenario,struct WINDOW *win){
 }
 
 void draw_free_scenario(struct scenario *scenario, int current_height, struct snake *snake,struct WINDOW *win){
-  for (int i = 0; i < scenario->width; ++i)
+  int empty_spaces_to_skip = 0;
+  for (int width = 0; width < scenario->width; ++width)
   {
-    int drew = 0;
-
-    if (snake->position_x == current_height && snake->position_y == i){
-      for (int i = 0; i < snake->number_of_foods_eaten + 1; ++i)
+    if (snake->position_x == current_height && snake->position_y == width){
+      for (int width = 0; width < snake->number_of_foods_eaten + 1; ++width)
       {
         printw("🐉");
         wrefresh(win);
-        drew = 1;
+        empty_spaces_to_skip += 1;
       }
     }
 
-    if (scenario->food_position_x == current_height && scenario->food_position_y == i){
+    if (scenario->food_position_x == current_height && scenario->food_position_y == width){
       printw("💷");
       wrefresh(win);
-      drew = 1;
+      empty_spaces_to_skip += 1;
     }
 
-    if (drew == 0){
+    if (empty_spaces_to_skip == 0){
       printw(" ");
       wrefresh(win);
+    }
+    else{
+      empty_spaces_to_skip -= 1;
     }
   }
 
@@ -44,7 +46,9 @@ void detect_collision(){
 
 void draw_scenario(struct scenario *scenario, struct snake *snake, struct WINDOW *win){
   clear_screen();
+
   int current_speed = 20000000L;
+
   for (int height = 0; height < scenario->height; ++height)
   {
     printw("|");
@@ -62,24 +66,23 @@ void draw_scenario(struct scenario *scenario, struct snake *snake, struct WINDOW
   }
 
   if (snake->moviment_direction == 0){
-    snake->position_y = snake->position_y + 1;
+    snake->position_y += 1;
   }
   else if(snake->moviment_direction == 1){
-    snake->position_y = snake->position_y - 1;
+    snake->position_y -= 1;
   }
   else if(snake->moviment_direction == 2){
-    snake->position_x = snake->position_x + 1;
+    snake->position_x += 1;
   }
   else{
-    snake->position_x = snake->position_x - 1;
+    snake->position_x -= 1;
   }
 
   if (scenario->food_position_x == snake->position_x && scenario->food_position_y == snake->position_y){
-    snake->number_of_foods_eaten = snake->number_of_foods_eaten + 1;
+    snake->number_of_foods_eaten += 1;
     scenario->food_position_x = generate_random_position(LIMIT_SCREEN_HEIGHT / 2);
     scenario->food_position_y = generate_random_position(LIMIT_SCREEN_WIDTH / 2);
   }
-
 
   switch (getch()){
     case KEY_UP:
