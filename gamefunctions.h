@@ -1,52 +1,94 @@
-#include <time.h>
-
-void draw_boundaries(struct scenario *scenario){
+void draw_boundaries(struct scenario *scenario,struct WINDOW *win){
   for (int i = 0; i < scenario->width; ++i)
   {
-    printf("-");
+    printw("-");
+    wrefresh(win);
   }
-  printf("|");
+  printw("|");
+  wrefresh(win);
 }
 
-void draw_free_scenario(struct scenario *scenario, int current_height, struct snake *snake){
+void draw_free_scenario(struct scenario *scenario, int current_height, struct snake *snake,struct WINDOW *win){
   for (int i = 0; i < scenario->width; ++i)
   {
+    int drew = 0;
+
     if (snake->position_x == current_height && snake->position_y == i){
-      printf("o");
+      for (int i = 0; i < snake->number_of_foods_eaten + 1; ++i)
+      {
+        printw("🐉");
+        wrefresh(win);
+        drew = 1;
+      }
     }
-    else{
-      printf(" ");
+
+    if (scenario->food_position_x == current_height && scenario->food_position_y == i){
+      printw("💷");
+      wrefresh(win);
+      drew = 1;
+    }
+
+    if (drew == 0){
+      printw(" ");
+      wrefresh(win);
     }
   }
-  printf("|");
+
+  printw("|");
+  wrefresh(win);
 }
 
 void detect_collision(){
 
 }
 
-void draw_scenario(struct scenario *scenario, struct snake *snake){
+void draw_scenario(struct scenario *scenario, struct snake *snake, struct WINDOW *win){
   clear_screen();
+  int current_speed = 300000000L;
   for (int height = 0; height < scenario->height; ++height)
   {
-    printf("|");
+    printw("|");
     if (height == 0){
-      draw_boundaries(scenario);
+      draw_boundaries(scenario, win);
     }
     else if(height < scenario->height - 1){
-      draw_free_scenario(scenario, height, snake);
+      draw_free_scenario(scenario, height, snake, win);
     }
     else{
-      draw_boundaries(scenario);
+      draw_boundaries(scenario, win);
     }
-    printf("\n");
+    printw("\n");
+    wrefresh(win);
   }
+
   if (snake->moviment_direction == 0){
     snake->position_y = snake->position_y + 1;
   }
-  else{
+  else if(snake->moviment_direction == 1){
+    snake->position_y = snake->position_y - 1;
+  }
+  else if(snake->moviment_direction == 2){
     snake->position_x = snake->position_x + 1;
   }
+  else{
+    snake->position_x = snake->position_x - 1;
+  }
+
+  switch (getch()){
+    case KEY_UP:
+      snake->moviment_direction = 3;
+      break;
+    case KEY_DOWN:
+      snake->moviment_direction = 2;
+      break;
+    case KEY_LEFT:
+      snake->moviment_direction = 1;
+      break;
+    case KEY_RIGHT:
+      snake->moviment_direction = 0;
+      break;
+  }
+  clear();
   detect_collision();
-  nanosleep((const struct timespec[]){{0, 600000000L}}, NULL);
+  nanosleep((const struct timespec[]){{0, current_speed}}, NULL);
 }

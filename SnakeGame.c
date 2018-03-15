@@ -1,66 +1,84 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <curses.h>
+#include <locale.h>
+#include <time.h>
 #include "helpers.h"
 #include "types.h"
 #include "gamefunctions.h"
 
-void start_game(){
+void start_game(struct WINDOW *win){
   clear_screen();
 
-  int limit_screen_width = 100;
-  int limit_screen_height = 50;
-  int snake_position_x = generate_random_position(limit_screen_width / 2);
-  int snake_position_y = generate_random_position(limit_screen_height / 2);
+  int limit_screen_width = 50;
+  int limit_screen_height = 20;
+
+  int snake_position_x = generate_random_position(limit_screen_height / 2);
+  int snake_position_y = generate_random_position(limit_screen_width / 2);
+
+  int food_position_x = generate_random_position(limit_screen_height / 2);
+  int food_position_y = generate_random_position(limit_screen_width / 2);
 
   struct snake player = { 0, snake_position_x, snake_position_y, 0 };
+  struct scenario main_scenario = { limit_screen_width, limit_screen_height, food_position_x, food_position_y };
 
   while(1){
-    int food_position_x = generate_random_position(limit_screen_width);
-    int food_position_y = generate_random_position(limit_screen_height);
-
-    struct scenario main_scenario = { limit_screen_width, limit_screen_height, food_position_x, food_position_y };
-
-    draw_scenario(&main_scenario, &player);
+    draw_scenario(&main_scenario, &player, win);
   };
 }
 
-void display_high_scores(){
+void display_high_scores(struct WINDOW *win){
   clear_screen();
 }
 
-void render_menu(){
+void render_menu(struct WINDOW *win){
   int option;
 
-  printf("Choose an option:\n");
-  printf("1 - Start a new game\n");
-  printf("2 - Display Highest Records\n");
-  printf("3 - Exit\n");
+  printw("Choose an option:\n");
+  printw("1 - Start a new game\n");
+  printw("2 - Display highest records\n");
+  printw("3 - Exit\n");
+
+  wrefresh(win);
 
   scanf("%d", &option);
 
   switch(option){
     case 1:
-      start_game();
-      render_menu();
+      start_game(win);
+      render_menu(win);
     case 2:
-      display_high_scores();
-      render_menu();
+      display_high_scores(win);
+      render_menu(win);
     case 3:
-      printf("See you soon\n");
+      printw("See you soon\n");
+      endwin();
       exit(0);
     default:
-      printf("Invalid selection...\n\n");
-      render_menu();
+      printw("Invalid selection...\n\n");
+      render_menu(win);
   }
 }
 
 int main(){
+  setlocale(LC_CTYPE, "");
+  WINDOW * win;
+
+  win = initscr();
+
+  clear();
+  noecho();
+  cbreak();
+  timeout(100);
+  keypad(stdscr, TRUE);
+
   clear_screen();
 
-  printf("The old-school snake game...\n\n");
-  printf("**************************\n");
 
-  render_menu();
+  printw("💷  💷  💷  💷    The capitalist dragon game   💷  💷  💷  💷\n\n");
+  printw("🐉   🐉   🐉   🐉   🐉   🐉   🐉   🐉   🐉   🐉   🐉   🐉   🐉   🐉\n");
+
+  render_menu(win);
 
   return 0;
 }
